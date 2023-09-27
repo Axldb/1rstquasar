@@ -23,20 +23,16 @@
     </div>
 
 </template>
-
 <script setup lang="ts">
 
-    import { ref, onMounted, defineEmits,defineProps } from 'vue';
+    import { ref, onMounted, defineEmits,defineProps,watch } from 'vue';
     import axios from 'axios';
-    import { Film } from '../FilmModele/IFilm.ts';
+    import { Film } from '../FilmModele/Film.ts';
+
 
     const isEditing = ref(false);
     const emit = defineEmits(['update', 'closeForm']);
-    /*
-    const emit = defineEmits<{
-        (e: 'update'): void
-        (e: 'closeForm'): void
-    }>();*/
+    
     const props = defineProps<{
         tmpfilm: Film
     }>();
@@ -62,17 +58,18 @@
         try {
             const response = await axios.put(`https://localhost:7195/Film/Update/${film.value.id}`, film.value);
 
-            console.log('Mise à jour réussie :', response.data);
+            console.log('Mise Ã  jour rÃ©ussie :', response.data);
             emit('update');
             emit('closeForm');
         } catch (error) {
-            console.error('Erreur lors de la mise à jour du film :', error);
+            console.error('Erreur lors de la mise ï¿½ jour du film :', error);
         }
     }
+
     onMounted(() => {
         if (props.tmpfilm) {
-            film.value = props.tmpfilm;
+            film.value = props.tmpfilm[0];
             isEditing.value = true;
         }
     })
-</script>
+</script>../FilmModele/Film.js
