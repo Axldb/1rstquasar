@@ -68,9 +68,21 @@
             emit('reset')
            
         } catch (error) {
-            console.error('Erreur lors de la mise � jour du film :', error);
+            console.error('Erreur lors de la mise à jour du film :', error);
         }
     }
+
+    watch(() => props.tmpfilm, (newtmpfilm) => {
+    if (newtmpfilm && newtmpfilm.length > 0) {
+        
+        film.value = newtmpfilm[0] as Film;
+        isEditing.value = true;
+    }else{emit('reset')}
+});
+
+    //watch(chosequivachanger, functionaexecuter)
+
+
 
     onMounted(() => {
         if (props.tmpfilm && props.tmpfilm.length > 0) {
@@ -78,11 +90,5 @@
             isEditing.value = true;
         }
     })
-
-    watch(props.tmpfilm ,(newtmpfilm)=>{
-        if(newtmpfilm){
-        film.value = newtmpfilm[0]
-        isEditing.value = true;
-        }
-    })
+    
 </script>

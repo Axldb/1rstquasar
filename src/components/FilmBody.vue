@@ -33,21 +33,16 @@
   const isDisabled = ref(true);
   const isAddDisabled = ref(false);
   const selectedFilm = ref<Film>();
+    const isVisible = ref(false);
 
+  
 
-console.log(selectedFilm)
 watch(selectedFilm,(NV :Film)=>{
-  console.log(selectedFilm)
-  if(selectedFilm.value === undefined ||selectedFilm.value.length < 1 ){
+  const test= selectedFilm.value === undefined ||selectedFilm.value.length < 1 
+  
     
-    isDisabled.value = true;
-  isAddDisabled.value = false;
-    
-    
-  }else{
-    isDisabled.value = false;
-  isAddDisabled.value = true;
-  }
+    isDisabled.value = test;
+  isAddDisabled.value = !test;
 })
 
 
@@ -63,7 +58,7 @@ watch(selectedFilm,(NV :Film)=>{
     selectedFilm.value = undefined;
   }
 
-  const isVisible = ref(false);
+
     const showForm = () => {
         isVisible.value = !isVisible.value;
     };
@@ -78,9 +73,6 @@ watch(selectedFilm,(NV :Film)=>{
   async function deleteSelectedFilms() {
 
     const filmId = selectedFilm.value[0].id;
-    await deleteFilmById(filmId);
-    }
-async function deleteFilmById(filmId: number) {
         try {
             await axios.delete(`https://localhost:7195/Film/Del?id=${filmId}`);
             // Actualisez la liste des films après la suppression
