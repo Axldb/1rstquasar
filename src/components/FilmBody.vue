@@ -8,7 +8,7 @@
         :columns="columns"
         row-key="id"
         selection="single"
-        v-model:selected="selectedFilm"
+       v-model:selected="selectedFilm"
       />
     </div>
 
@@ -19,7 +19,7 @@
     </div>
     <br />
     <br />
-    <FilmFormulaire :tmpfilm="selectedFilm" @update="fetchFilms();" @closeForm="handleshowForm" v-if="selectedFilm && Object.keys(selectedFilm).length > 0 || isVisible " />
+    <FilmFormulaire :tmpfilm="selectedFilm" @update="fetchFilms();" @reset="selectedFilmReset"  v-if="selectedFilm && Object.keys(selectedFilm).length > 0 || isVisible " />
     <br />
     <br />
   </template>
@@ -29,14 +29,28 @@
   import axios from 'axios'
   import { Film } from '../FilmModele/Film.ts'
   import FilmFormulaire from './FilmFormulaire.vue';
-
+  
   const isDisabled = ref(true);
   const isAddDisabled = ref(false);
   const selectedFilm = ref<Film>();
+
+
+console.log(selectedFilm)
 watch(selectedFilm,(NV :Film)=>{
-  isDisabled.value = !isDisabled.value;
-  isAddDisabled.value = !isDisabled.value
+  console.log(selectedFilm)
+  if(selectedFilm.value === undefined ||selectedFilm.value.length < 1 ){
+    
+    isDisabled.value = true;
+  isAddDisabled.value = false;
+    
+    
+  }else{
+    isDisabled.value = false;
+  isAddDisabled.value = true;
+  }
 })
+
+
 
   const columns = [
     { name: 'titre', align: 'left', label: 'Titre', field: 'titre', sortable: true },
@@ -45,10 +59,10 @@ watch(selectedFilm,(NV :Film)=>{
   ]
   const films = ref<Film[]>([])
   
-  function handleshowForm() {
-        selectedFilm.value =null;
-        showForm()
-    }
+  function selectedFilmReset(){
+    selectedFilm.value = undefined;
+  }
+
   const isVisible = ref(false);
     const showForm = () => {
         isVisible.value = !isVisible.value;
@@ -71,8 +85,7 @@ async function deleteFilmById(filmId: number) {
             await axios.delete(`https://localhost:7195/Film/Del?id=${filmId}`);
             // Actualisez la liste des films après la suppression
             fetchFilms();
-            isDisabled.value = !isDisabled.value;
-            isAddDisabled.value = !isDisabled.value
+            selectedFilmReset();
         } catch (error) {
             console.error(`Erreur lors de la suppression du film avec l'ID ${filmId}:`, error);
         }

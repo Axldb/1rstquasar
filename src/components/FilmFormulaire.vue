@@ -31,22 +31,27 @@
 
 
     const isEditing = ref(false);
-    const emit = defineEmits(['update', 'closeForm']);
+    const emit = defineEmits(['update','reset']);
     
     const props = defineProps<{
         tmpfilm: Film
     }>();
+    
     const film = ref<Film>({
 
         idCatFilm: 1
     } as Film);
+    
+    
+ 
 
     
     const handleSubmit = async () => {
         try {
             const response = await axios.post('https://localhost:7195/Film/Add', film.value);
-            console.log(response.data);
-            emit('update');
+
+            emit('update','reset');
+  
         } catch (error) {
             console.error(error);
         }
@@ -60,16 +65,24 @@
 
             console.log('Mise à jour réussie :', response.data);
             emit('update');
-            emit('closeForm');
+            emit('reset')
+           
         } catch (error) {
             console.error('Erreur lors de la mise � jour du film :', error);
         }
     }
 
     onMounted(() => {
-        if (props.tmpfilm) {
-            film.value = props.tmpfilm[0];
+        if (props.tmpfilm && props.tmpfilm.length > 0) {
+            film.value = props.tmpfilm[0] as Film;
             isEditing.value = true;
         }
     })
-</script>../FilmModele/Film.js
+
+    watch(props.tmpfilm ,(newtmpfilm)=>{
+        if(newtmpfilm){
+        film.value = newtmpfilm[0]
+        isEditing.value = true;
+        }
+    })
+</script>
