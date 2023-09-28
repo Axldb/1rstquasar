@@ -39,8 +39,6 @@
 
 watch(selectedFilm,(NV :Film)=>{
   const test= selectedFilm.value === undefined ||selectedFilm.value.length < 1 
-  
-    
     isDisabled.value = test;
   isAddDisabled.value = !test;
 })
